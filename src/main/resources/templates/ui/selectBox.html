@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>에이젝스를 활용한 옵션창</title>
+
+<link rel="stylesheet" href="/css/bootstrap.css" th:href="@{/css/bootstrap.css}">
+
+<script src="/js/jquery-3.5.1.js" th:src="@{/js/jquery-3.5.1.js}"></script>
+<script src="/js/popper.js" th:src="@{/js/popper.js}"></script>
+<script src="/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+
+<script type="text/javascript">
+	/* 밑에 html 파일이 모두 로딩된 후 동작됨 */
+	$(document).ready(function() {
+		$("#sel1").on("change", function() {
+			
+			var result = $("#sel1 option:selected").val();
+			
+			var datas = {areaName: result};
+			
+			/* ajax 쓸 때 자바스크립트의 object 쓸 때의 형태처럼 쓴다. */
+			$.ajax({
+				url: "/ui/selectBox1", 
+				type: "POST",
+				data: datas,
+				success: function(data) {
+					var sel2 = $("#sel2"); // selectBox 선택
+					sel2.empty(); // 지정한 태그의 하위태그 모두 삭제
+					sel2.append("<option value=''>선택해주세요</option>"); // 태그추가
+					
+					for (var i = 0; i < data.length; i++) {
+						sel2.append("<option>" + data[i].areaName + "</option>");
+					}
+					/* alert("ajax 통신 성공" + "\n" + data); */
+				},
+				error: function() {
+					alert("ajax 통신 오류");
+				}
+			});
+		});
+	});
+</script>
+
+</head>
+<body>
+	<header>
+		<div class="jumbotron">
+			<h1>ajax를 사용하여 select box에 내용 추가 하기</h1>
+		</div>
+	</header>
+	<main class="container">
+		<section class="row">
+			<article class="col-sm mx-auto">
+			<form>
+				<select class="form-control mb-3" id="sel1">
+					<option selected>선택하세요</option>
+					<option>서울</option>
+					<option>대전</option>
+					<option>대구</option>
+					<option>부산</option>
+				</select>
+				<select class="form-control mb-3" id="sel2">
+					<option selected>선택하세요</option>
+				</select>
+			</form>
+			</article>
+		</section>
+	</main>
+</body>
+</html>

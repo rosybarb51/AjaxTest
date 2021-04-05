@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>자바스크립트를 이용한 회원가입</title>
+<!-- 
+
+문제 1) 회원 가입 폼을 생성하세요 →자바스크립트만 처리하면됨
+
+id, pw, email, phone, tel, address 부분 입력
+email 부분에 주로 사용하는 이메일 주소 5개 선택하는 방식
+
+주소입력란에 지역 선택 시 중분류 지역 선택, 중분류 지역 선택 시 소 분류 지역 선택 (대분류 3개, 중분류 3개, 소분류 3개)
+
+자바스크립트와 jquery 를 이용하여 처리
+
+ -->
+<link rel="stylesheet" href="/css/bootstrap.css" th:href="@{/css/bootstrap.css}">
+
+<script src="/js/jquery-3.5.1.js" th:src="@{/js/jquery-3.5.1.js}"></script>
+<script src="/js/popper.js" th:src="@{/js/popper.js}"></script>
+<script src="/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+
+
+<script type="text/javascript">
+
+	/* 문서가 준비되면 매개변수로 넣은 콜백 함수를 실행하라는 메서드 */
+	$(document).ready(function() {
+		
+		/* html의 select 박스 아이디가져와서 미리 선언 */
+		var addr1 = $("#addr1");
+		var addr2 = $("#addr2");
+		var addr3 = $("#addr3");
+		
+		/* 광역시/도 */
+		/* 요소의 값이 변경될 때 발생 */
+		$("#addr1").on("change", function() {
+			
+			/* .val() 는 form의 값을 가져오거나 값을 설정 */
+			var areaName = $("#addr1 option:selected").val();
+			var arrLocal = local(areaName);
+			
+			/* 하위 옵션창 정리 */
+			addr2.empty(); // 지정한 태그의 하위 태그 모두 삭제
+			addr2.append("<option>시/군/구</option>"); // 태그 추가
+			addr3.empty();
+			addr3.append("<option>지역명</option>");
+			
+			/* 아래의 지역 배열을 하나씩 추가 */
+			for (var i = 0; i < arrLocal.length; i++) {
+				addr2.append("<option>" + arrLocal[i] + "</option>");
+			}
+		});	
+		
+		/* 시/군/구 */
+		$("#addr2").on("change", function() {
+			
+			var areaName = $("#addr2 option:selected").val();
+			var arrLocal = area(areaName);
+			
+			addr3.empty();
+			addr3.append("<option>지역명</option>");
+			
+			for (var i = 0; i < arrLocal.length; i++) {
+				addr3.append("<option>" + arrLocal[i] + "</option>");
+			}
+		});	
+		
+		function local(area) {
+			var local = []; // 배열 선언
+			
+			if (area == "서울특별시") {
+				local[0] = "강북구"
+				local[1] = "강서구"
+				local[2] = "강남구"
+			}
+			else if (area == "부산광역시") {
+				local[0] = "동래구"
+				local[1] = "해운대구"
+				local[2] = "부산진구"
+			}
+			else if (area == "제주특별시") {
+				local[0] = "제주시"
+				local[1] = "서귀포시"
+			}
+			
+			return local;
+		}
+		
+		function area(areaName) {
+			area1 = [
+				["개포동", "논현동", "대치동"],
+				["미아동", "번동", "수유동"],
+				["가양동", "개화동", "공항동"]
+			];
+			area2 = [
+				["낙민동", "명륜동", "명장동"],
+				["반송동", "반여동", "석대동"],
+				["가야동", "개금동", "당감동"]
+			];
+			area3 = [
+				["건입동", "구좌동", "내도동"],
+				["강정동", "남원동", "대정동"]
+			];
+			
+			/* 2차원 배열을 이용해서 시/도/군을 각 case의 조건으로 두고 각각에 맞는 지역명을 index 번호로 호출한다. */
+			switch (areaName) {
+			case "강북구":
+				return area1[0];
+			break;
+			
+			case "강서구":
+				return area1[1];
+			break;
+			
+			case "강남구":
+				return area1[2];
+				break;
+			
+			case "동래구":
+				return area2[0];
+			break;
+			
+			case "해운대구":
+				return area2[1];
+			break;
+			
+			case "부산진구":
+				return area2[2];
+			break;
+			
+			case "제주시":
+				return area3[0];
+			break;
+			
+			case "서귀포시":
+				return area3[1];
+			break;
+			}
+		}
+	});
+</script>
+</head>
+<body>
+	<header class="container">
+		<div class="jumbotron">
+			<h1 class="text-center">회원 가입</h1>
+		</div>
+	</header>
+	<main class="container">
+		<section class="row">
+			<article class="col-sm-8 mx-auto">
+				<table class="table table-hover table-striped">
+					<tr class="text-center">
+						<th>아이디: </th>
+						<td>
+							<input type="text" name="userId">
+						</td>
+					</tr>
+					<tr class="text-center">
+						<th>비밀번호: </th>
+						<td>
+							<input type="text" name="userPw">
+						</td>
+					</tr>
+					<tr class="text-center">
+						<th>이메일: </th>
+						<td>
+							<input type="text" name="userEmail">
+						</td>
+					</tr>
+					<tr class="text-center">
+						<th>휴대폰: </th>
+						<td>
+							<input type="text" name="userPhone">
+						</td>
+					</tr>
+					<tr class="text-center">
+						<th>전화번호: </th>
+						<td>
+							<input type="text" name="userId">
+						</td>
+					</tr>
+					<tr class="text-center">
+						<th>주소: </th>
+						<td>
+							<input type="text" name="userId">
+							<article class="col-sm-6 mx-auto">
+				<select class="form-control mb-3" id="addr1">
+					<option selected>광역시/도</option>
+					<option>서울특별시</option>
+					<option>부산광역시</option>
+					<option>제주특별시</option>
+				</select>
+				<select class="form-control mb-3" id="addr2">
+					<option selected>시/군/구</option>
+				</select>
+				<select class="form-control mb-3" id=addr3>
+					<option selected>지역명</option>
+				</select>
+			</article>
+						</td>
+					</tr>
+				</table>
+				
+				<div class="clearfix">
+					<a class="btn btn-primary float-right" href="/addr/writeAddress.do">가입하기</a>
+				</div>
+			</article>
+		</section>
+	</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

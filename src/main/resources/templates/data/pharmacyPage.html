@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>rest API 이용</title>
+
+<link rel="stylesheet" href="/css/bootstrap.css" th:href="@{/css/bootstrap.css}">
+
+<script src="/js/jquery-3.5.1.js" th:src="@{/js/jquery-3.5.1.js}"></script>
+<script src="/js/popper.js" th:src="@{/js/popper.js}"></script>
+<script src="/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#btnOK").on("click", function() {
+			$.ajax({
+				/* 컨트롤러에 적은 주소 */
+				url: "/data/pharmacyFullData",
+				type: "POST",
+				/* data 보낼 거 없으면 안 적어도 됨 */
+				data: {page: 1, row: 10},
+				datyaType: "text",
+				success: function(data) {
+					alert(data);
+					console.log(JSON.parse(data));
+				},
+				error: function() {
+					alert("ajax 통신에 오류가 발생했습니다.");
+				}
+			});
+		});
+	});
+</script>
+</head>
+<body>
+	<header class="container">
+		<div class="jumbotron">
+			<h1>공공데이터 포털에서 데이터 가지고 오기</h1>
+		</div>
+	</header>
+	<main class="container">
+		<section>
+			<article>
+				<button class="btn btn-primary" id="btnOK">데이터 가져오기</button>
+			</article>
+		</section>
+	</main>
+</body>
+</html>

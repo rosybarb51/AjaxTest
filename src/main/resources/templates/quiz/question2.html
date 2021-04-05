@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<link rel="stylesheet" href="/css/bootstrap.css" th:href="@{/css/bootstrap.css}">
+<script src="/js/jquery-3.5.1.js" th:src="@{/js/jquery-3.5.1.js}"></script>
+<script src="/js/popper.min.js" th:src="@{/js/popper.min.js}"></script>
+<script src="/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+<script>
+	$(document).ready(function() {
+		$("#selArea1").on("change", function() {
+			// #은 id #selArea1 뒤에 한 칸 띄운 것은 후손태그 선택
+			var area = $("#selArea1 option:selected").val(); // 제이쿼리에서 .val()은 value값을 들고 옴
+			$.ajax({
+				url: "/quiz/areaList2",
+				type: "POST",
+				data: {areaName: area}, // 밑에 초기화할 때는 데이터 안 넣어줬따.
+				success: function(data) { // 성공하면 컨트롤러에서 만든 이메일리스트가 data에 들어간다
+					$("#selArea2").empty();
+					$("#selArea3").empty();
+					
+					$("#selArea2").append("<option selected>선택해주세요</option>");
+					$("#selArea3").append("<option selected>선택해주세요</option>");
+					
+					for (var i = 0; i < data.length; i++) {
+						$("#selArea2").append("<option>" + data[i] + "</option>");
+					}
+				},
+				error: function() {
+					alert("ajax 통신 오류");
+				}
+			});
+		});
+		
+		$("#selArea2").on("change", function() {
+			var area = $("#selArea2 option:selected").val();
+			$.ajax({
+				url: "/quiz/areaList3",
+				type: "POST",
+				data: {areaName: area},
+				success: function(data) {
+					$("#selArea3").empty();
+					$("#selArea3").append("<option selected>선택해주세요</option>");
+					
+					for (var i = 0; i < data.length; i++) {
+						$("#selArea3").append("<option>" + data[i] + "</option>");
+					}
+				},
+				error: function() {
+					alert("ajax 통신 오류");
+				}
+			});
+		});
+		
+		$("#btnSubmit").on("click", function() {
+			
+		});
+		
+		init();
+	});
+	
+	// function 이라고 하면, 자바스크립트가 위에서부터 한 줄 씩 읽어오다가, function이라고 하면 그 뒤의 함수를 메모리에 등록(정확히는 이벤트 리스너에 등록)만 해두는 것임, 실제 그 안의 메서드가 실행되는 것이 아니다, 언제 실행되냐면 제일 위의 도큐먼트 레디 펑션읽고 , 실제 동작을 사용자가 해서 온체인지밑에 해당 함수를 따로 적어둔 곳에서 함수가 실행된다
+	function init() {
+		emailInit();
+		phoneInit();
+		telInit();
+		addrInit();
+	}
+	
+	function emailInit() {
+		$.ajax({
+			url: "/quiz/emailList",
+			type: "POST",
+			success: function(data) {
+				$("#selEmail").empty();
+				for (var i = 0; i < data.length; i++) {
+					$("#selEmail").append("<option>" + data[i] + "</option>");
+				}
+			},
+			error: function() {
+				alert("ajax 통신 오류");
+			}
+		});
+	}
+	
+	function phoneInit() {
+		$.ajax({
+			url: "/quiz/phoneList",
+			type: "POST",
+			success: function(data) {
+				$("#selPhone").empty();
+				for (var i = 0; i < data.length; i++) {
+					$("#selPhone").append("<option>" + data[i] + "</option>");
+				}
+			},
+			error: function() {
+				alert("ajax 통신 오류");
+			}
+		});
+	}
+	
+	function telInit() {
+		$.ajax({
+			url: "/quiz/telList",
+			type: "POST",
+			success: function(data) {
+				$("#selTel").empty();
+				for (var i = 0; i < data.length; i++) {
+					$("#selTel").append("<option>" + data[i] + "</option>");
+				}
+			},
+			error: function() {
+				alert("ajax 통신 오류");
+			}
+		});
+	}
+	
+	function addrInit() {
+		$.ajax({ // 초기화하는 것이라서 데이터를 안 넣어줬다. 
+			url: "/quiz/areaList1",
+			type: "POST",
+			success: function(data) {
+				$("#selArea1").empty();
+				$("#selArea1").append("<option selected>시</option>");
+				for (var i = 0; i < data.length; i++) {
+					$("#selArea1").append("<option>" + data[i] + "</option>");
+				}
+			},
+			error: function() {
+				alert("ajax 통신 오류");
+			}
+		});
+	}
+</script>
+</head>
+<body>
+    <header class="container">
+        <div class="jumbotron">
+            <h1>회원가입 페이지 입니다.</h1>
+        </div>
+    </header>
+    <main class="container">
+        <section class="row">
+            <article class="col-sm-6 mx-auto">
+                <form action="/quiz/question2" method="POST">
+                    <!-- id, pw, email, phone, tel, address -->
+                    <div class="form-group">
+                        <label for="userId">ID : </label>
+                        <input type="text" class="form-control" id="userId" name="userId" placeholder="ID를 입력해주세요">
+                    </div>
+                    <div class="form-group">
+                        <label for="userPw">Password : </label>
+                        <input type="text" class="form-control" id="userPw" name="userPw" placeholder="PW를 입력해주세요">
+                    </div>
+                    <div class="form-group">
+                        <label for="userName">Name : </label>
+                        <input type="text" class="form-control" id="userName" name="userName" placeholder="이름을 입력해주세요">
+                    </div>
+                    
+                    <label for="userEmail">Email : </label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="userEmail" name="userEmail" placeholder="Email을 입력해주세요">
+                        <div class="input-group-append">
+	                        <select class="form-control" id="selEmail">
+	                        
+	                        </select>
+                        </div>
+                    </div>
+                    <label for="userPhone1">Phone : </label>
+                    <div class="input-group mb-3">
+                    	<div class="input-group-prepend">
+	                        <select class="form-control" id="selPhone">
+	                        
+	                        </select>
+	                        <span class="input-group-text">-</span>
+                        </div>
+                        <input type="text" class="form-control" id="userPhone1" name="userPhone1">
+                        <div class="input-group-append">
+       						<span class="input-group-text">-</span>
+    					</div>
+                        <input type="text" class="form-control" id="userPhone2" name="userPhone2">
+                    </div>
+                    <label for="userTel1">Tel : </label>
+                    <div class="input-group mb-3">
+                    	<div class="input-group-prepend">
+	                        <select class="form-control" id="selTel">
+	                        
+	                        </select>
+	                        <span class="input-group-text">-</span>
+                        </div>
+                        <input type="text" class="form-control" id="userTel1" name="userTel1">
+                        <div class="input-group-append">
+       						<span class="input-group-text">-</span>
+    					</div>
+                        <input type="text" class="form-control" id="userTel2" name="userTel2">
+                    </div>
+                    <div class="form-group">
+                        <label for="userAddr1">Address : </label>
+                        <div class="d-flex justify-content-between mb-2">
+                        	<select class="form-control flex-fill" id="selArea1">
+	                        </select>
+	                        <select class="form-control flex-fill" id="selArea2"></select>
+	                        <select class="form-control flex-fill" id="selArea3"></select>
+                        </div>
+                        
+                        <input type="text" class="form-control" id="userAddr2" name="userAddr2" placeholder="ID를 입력해주세요">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="btnSubmit">확인</button>
+                </form>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

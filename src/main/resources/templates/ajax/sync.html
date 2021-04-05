@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title></title>
+
+<script src="/js/jquery-3.5.1.js" th:src="@{/js/jquery-3.5.1.js}"></script>
+
+</head>
+<body>
+	<h1>sync 방식 웹 페이지, 기존방식의 사이트 접근 방식 - 동기방식</h1>
+	
+	<!-- 기존방식의 사이트 접근 방식 - 동기방식 -->
+	<!-- 1. 기본적으로 서버로 데이터 보낼 때 기본적으로는 아래와 같이 form 태그, input 태그를 사용해야한다, 그리고 form 태그의 action에 보내는 주소 적어줘야함 -->
+	<form action="/sync/cal" method=GET>
+		<input type="text" name="num1" placeholder="첫 번째 숫자를 입력해주세요">
+		<input type="text" name="num2" placeholder="두 번째 숫자를 입력해주세요">
+		<button type="submit">확인</button>
+	</form>
+</body>
+</html>
